@@ -10,7 +10,8 @@ type Habit = {
 };
 
 const fetchHabits = async (): Promise<Habit[]> => {
-  const response = await fetch("http://localhost:3001/habits", {
+  const baseUrl = process.env.API_BASE_URL ?? "http://localhost:3001";
+  const response = await fetch(`${baseUrl}/habits`, {
     cache: "no-store",
   });
 
