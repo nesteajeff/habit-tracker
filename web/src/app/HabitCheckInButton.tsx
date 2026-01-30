@@ -6,12 +6,16 @@ import styles from "./page.module.css";
 
 type Props = {
   habitId: string;
+  hasCheckedInToday: boolean;
 };
 
 const getApiBaseUrl = () =>
   process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3001";
 
-export default function HabitCheckInButton({ habitId }: Props) {
+export default function HabitCheckInButton({
+  habitId,
+  hasCheckedInToday,
+}: Props) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -47,9 +51,13 @@ export default function HabitCheckInButton({ habitId }: Props) {
         className={styles.checkInButton}
         type="button"
         onClick={handleCheckIn}
-        disabled={isSubmitting}
+        disabled={isSubmitting || hasCheckedInToday}
       >
-        {isSubmitting ? "Checking in..." : "Check in"}
+        {hasCheckedInToday
+          ? "Checked in"
+          : isSubmitting
+            ? "Checking in..."
+            : "Check in"}
       </button>
       {error ? <span className={styles.checkInError}>{error}</span> : null}
     </div>

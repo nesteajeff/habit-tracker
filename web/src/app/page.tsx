@@ -8,6 +8,7 @@ type Habit = {
   name: string;
   description: string | null;
   isActive: boolean;
+  hasCheckedInToday: boolean;
   createdAt: string;
 };
 
@@ -68,7 +69,17 @@ export default async function Home() {
                 <p className={styles.cardMeta}>
                   Created {new Date(habit.createdAt).toLocaleString()}
                 </p>
-                <HabitCheckInButton habitId={habit.id} />
+                <div className={styles.checkInRow}>
+                  <span className={styles.checkInStatus}>
+                    {habit.hasCheckedInToday
+                      ? "Checked in today"
+                      : "Not checked in yet"}
+                  </span>
+                  <HabitCheckInButton
+                    habitId={habit.id}
+                    hasCheckedInToday={habit.hasCheckedInToday}
+                  />
+                </div>
               </li>
             ))}
           </ul>

@@ -26,16 +26,29 @@ const calculateCurrentStreak = (dates: string[]) => {
 router.get("/", async (_req, res) => {
   // TODO: replace hardcoded userId once auth is added.
   const userId = "00000000-0000-0000-0000-000000000000";
+  const todayUtc = toDateStringUtc(new Date());
 
   try {
     const result = await db.query(
       `
-      SELECT id, user_id, name, description, is_active, created_at
-      FROM habits
-      WHERE user_id = $1
-      ORDER BY created_at DESC
+      SELECT
+        h.id,
+        h.user_id,
+        h.name,
+        h.description,
+        h.is_active,
+        h.created_at,
+        EXISTS (
+          SELECT 1
+          FROM habit_entries he
+          WHERE he.habit_id = h.id
+            AND he.entry_date = $2
+        ) AS has_checked_in_today
+      FROM habits h
+      WHERE h.user_id = $1
+      ORDER BY h.created_at DESC
       `,
-      [userId]
+      [userId, todayUtc]
     );
 
     const habits = result.rows.map((row) => ({
@@ -45,6 +58,7 @@ router.get("/", async (_req, res) => {
       description: row.description,
       isActive: row.is_active,
       createdAt: row.created_at,
+      hasCheckedInToday: row.has_checked_in_today,
     }));
 
     return res.status(200).json(habits);

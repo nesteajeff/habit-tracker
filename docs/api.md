@@ -45,6 +45,7 @@ List habits for the current user.
     "name": "Drink water",
     "description": "At least 8 cups",
     "isActive": true,
+    "hasCheckedInToday": false,
     "createdAt": "2026-01-30T12:00:00.000Z"
   }
 ]

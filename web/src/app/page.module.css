@@ -160,6 +160,19 @@
   font-size: 12px;
 }
 
+.checkInRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 12px;
+}
+
+.checkInStatus {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
 .checkIn {
   display: flex;
   flex-direction: column;
