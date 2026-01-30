@@ -77,3 +77,20 @@ Create a check-in for a habit on a specific date (defaults to today).
 
 - If `entryDate` is omitted, the server uses today (UTC).
 - One entry per habit per day (unique constraint).
+
+### GET /habits/:id/entries
+
+List check-ins for a habit.
+
+#### Response (200)
+
+```
+[
+  {
+    "id": "uuid",
+    "habitId": "uuid",
+    "entryDate": "2026-01-30",
+    "createdAt": "2026-01-30T12:00:00.000Z"
+  }
+]
+```

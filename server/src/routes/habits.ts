@@ -119,4 +119,38 @@ router.post("/:id/check-in", async (req, res) => {
   }
 });
 
+// GET /habits/:id/entries
+router.get("/:id/entries", async (req, res) => {
+  const { id } = req.params;
+
+  if (!id) {
+    return res.status(400).json({ error: "Habit id is required." });
+  }
+
+  try {
+    const result = await db.query(
+      `
+      SELECT id, habit_id, entry_date, created_at
+      FROM habit_entries
+      WHERE habit_id = $1
+      ORDER BY entry_date DESC
+      `,
+      [id]
+    );
+
+    const entries = result.rows.map((row) => ({
+      id: row.id,
+      habitId: row.habit_id,
+      entryDate: row.entry_date,
+      createdAt: row.created_at,
+    }));
+
+    return res.status(200).json(entries);
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error("List entries failed:", error);
+    return res.status(500).json({ error: "Failed to list entries." });
+  }
+});
+
 export default router;
