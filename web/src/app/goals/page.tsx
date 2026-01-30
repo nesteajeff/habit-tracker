@@ -1,4 +1,5 @@
 import styles from "../page.module.css";
+import GoalForm from "./GoalForm";
 
 type Goal = {
   id: string;
@@ -91,6 +92,8 @@ export default async function GoalsPage() {
             This page loads goals from the Express API.
           </p>
         </header>
+
+        <GoalForm />
 
         {errorMessage ? (
           <p className={styles.error}>{errorMessage}</p>
