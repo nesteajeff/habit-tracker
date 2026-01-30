@@ -1,5 +1,6 @@
 import styles from "./page.module.css";
 import HabitForm from "./HabitForm";
+import HabitCheckInButton from "./HabitCheckInButton";
 
 type Habit = {
   id: string;
@@ -67,6 +68,7 @@ export default async function Home() {
                 <p className={styles.cardMeta}>
                   Created {new Date(habit.createdAt).toLocaleString()}
                 </p>
+                <HabitCheckInButton habitId={habit.id} />
               </li>
             ))}
           </ul>
