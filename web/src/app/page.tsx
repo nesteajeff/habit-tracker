@@ -1,4 +1,5 @@
 import styles from "./page.module.css";
+import HabitForm from "./HabitForm";
 
 type Habit = {
   id: string;
@@ -41,6 +42,8 @@ export default async function Home() {
             This page loads habits from the Express API.
           </p>
         </header>
+
+        <HabitForm />
 
         {errorMessage ? (
           <p className={styles.error}>{errorMessage}</p>
