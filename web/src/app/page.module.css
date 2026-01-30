@@ -135,6 +135,12 @@
   align-items: center;
 }
 
+.cardBadges {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .cardTitle {
   font-size: 18px;
   font-weight: 600;
@@ -147,6 +153,24 @@
   border-radius: 999px;
   background: #efefef;
   color: #333;
+}
+
+.streakBadge {
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: #e7f3ff;
+  color: #255b9a;
+}
+
+.streakLoading {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.streakError {
+  font-size: 12px;
+  color: #b00020;
 }
 
 .cardDescription {
@@ -215,6 +239,11 @@
   .badge {
     background: #1a1a1a;
     color: #ccc;
+  }
+
+  .streakBadge {
+    background: #13233a;
+    color: #b6d1ff;
   }
 
   .form {

@@ -1,6 +1,7 @@
 import styles from "./page.module.css";
 import HabitForm from "./HabitForm";
 import HabitCheckInButton from "./HabitCheckInButton";
+import HabitStreakBadge from "./HabitStreakBadge";
 
 type Habit = {
   id: string;
@@ -55,9 +56,12 @@ export default async function Home() {
               <li key={habit.id} className={styles.card}>
                 <div className={styles.cardHeader}>
                   <span className={styles.cardTitle}>{habit.name}</span>
-                  <span className={styles.badge}>
-                    {habit.isActive ? "Active" : "Paused"}
-                  </span>
+                  <div className={styles.cardBadges}>
+                    <span className={styles.badge}>
+                      {habit.isActive ? "Active" : "Paused"}
+                    </span>
+                    <HabitStreakBadge habitId={habit.id} />
+                  </div>
                 </div>
                 {habit.description ? (
                   <p className={styles.cardDescription}>
