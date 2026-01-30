@@ -3,6 +3,25 @@ import db from "../db";
 
 const router = Router();
 
+const toDateStringUtc = (date: Date) => date.toISOString().slice(0, 10);
+
+const calculateCurrentStreak = (dates: string[]) => {
+  if (dates.length === 0) return 0;
+
+  const set = new Set(dates);
+  let streak = 0;
+  let cursor = new Date();
+
+  while (true) {
+    const key = toDateStringUtc(cursor);
+    if (!set.has(key)) break;
+    streak += 1;
+    cursor.setUTCDate(cursor.getUTCDate() - 1);
+  }
+
+  return streak;
+};
+
 // GET /habits
 router.get("/", async (_req, res) => {
   // TODO: replace hardcoded userId once auth is added.
@@ -150,6 +169,40 @@ router.get("/:id/entries", async (req, res) => {
     // eslint-disable-next-line no-console
     console.error("List entries failed:", error);
     return res.status(500).json({ error: "Failed to list entries." });
+  }
+});
+
+// GET /habits/:id/streak
+router.get("/:id/streak", async (req, res) => {
+  const { id } = req.params;
+
+  if (!id) {
+    return res.status(400).json({ error: "Habit id is required." });
+  }
+
+  try {
+    const result = await db.query(
+      `
+      SELECT entry_date
+      FROM habit_entries
+      WHERE habit_id = $1
+      `,
+      [id]
+    );
+
+    const dates = result.rows.map((row) =>
+      typeof row.entry_date === "string"
+        ? row.entry_date
+        : toDateStringUtc(row.entry_date)
+    );
+
+    const currentStreak = calculateCurrentStreak(dates);
+
+    return res.status(200).json({ habitId: id, currentStreak });
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error("Get streak failed:", error);
+    return res.status(500).json({ error: "Failed to calculate streak." });
   }
 });
 

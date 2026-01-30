@@ -94,3 +94,20 @@ List check-ins for a habit.
   }
 ]
 ```
+
+### GET /habits/:id/streak
+
+Get the current streak for a habit.
+
+#### Response (200)
+
+```
+{
+  "habitId": "uuid",
+  "currentStreak": 3
+}
+```
+
+#### Notes
+
+- Streak counts consecutive days ending today (UTC).
