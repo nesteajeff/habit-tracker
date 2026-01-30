@@ -1,5 +1,6 @@
 import styles from "../page.module.css";
 import GoalForm from "./GoalForm";
+import GoalStatusSelect from "./GoalStatusSelect";
 
 type Goal = {
   id: string;
@@ -114,6 +115,10 @@ export default async function GoalsPage() {
                     ? formatRelativeDateOnly(goal.targetDate)
                     : "No target date"}
                 </p>
+                <GoalStatusSelect
+                  goalId={goal.id}
+                  currentStatus={goal.status}
+                />
               </li>
             ))}
           </ul>

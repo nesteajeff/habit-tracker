@@ -158,3 +158,28 @@ Create a new goal for the current user.
   "createdAt": "2026-01-30T12:00:00.000Z"
 }
 ```
+
+### PATCH /goals/:id
+
+Update a goal's status.
+
+#### Request body
+
+```
+{
+  "status": "paused"
+}
+```
+
+#### Response (200)
+
+```
+{
+  "id": "uuid",
+  "userId": "uuid",
+  "title": "Run a 5k",
+  "targetDate": "2026-02-15",
+  "status": "paused",
+  "createdAt": "2026-01-30T12:00:00.000Z"
+}
+```
