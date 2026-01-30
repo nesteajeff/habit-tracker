@@ -113,3 +113,48 @@ Get the current streak for a habit.
 #### Notes
 
 - Streak counts consecutive days ending today (UTC).
+
+### GET /goals
+
+List goals for the current user.
+
+#### Response (200)
+
+```
+[
+  {
+    "id": "uuid",
+    "userId": "uuid",
+    "title": "Run a 5k",
+    "targetDate": "2026-02-15",
+    "status": "active",
+    "createdAt": "2026-01-30T12:00:00.000Z"
+  }
+]
+```
+
+### POST /goals
+
+Create a new goal for the current user.
+
+#### Request body
+
+```
+{
+  "title": "Run a 5k",
+  "targetDate": "2026-02-15"
+}
+```
+
+#### Response (201)
+
+```
+{
+  "id": "uuid",
+  "userId": "uuid",
+  "title": "Run a 5k",
+  "targetDate": "2026-02-15",
+  "status": "active",
+  "createdAt": "2026-01-30T12:00:00.000Z"
+}
+```
