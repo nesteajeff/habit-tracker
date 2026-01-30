@@ -1,9 +1,10 @@
 import { Router } from "express";
+import db from "../db";
 
 const router = Router();
 
 // POST /habits
-router.post("/", (req, res) => {
+router.post("/", async (req, res) => {
   const { name, description } = req.body as {
     name?: string;
     description?: string;
@@ -13,17 +14,34 @@ router.post("/", (req, res) => {
     return res.status(400).json({ error: "Name is required." });
   }
 
-  // Placeholder: database insert will go here.
-  const habit = {
-    id: "uuid",
-    userId: "uuid",
-    name: name.trim(),
-    description: description?.trim() ?? null,
-    isActive: true,
-    createdAt: new Date().toISOString(),
-  };
+  // TODO: replace hardcoded userId once auth is added.
+  const userId = "00000000-0000-0000-0000-000000000000";
+  const trimmedDescription = description?.trim() ?? null;
 
-  return res.status(201).json(habit);
+  try {
+    const result = await db.query(
+      `
+      INSERT INTO habits (user_id, name, description)
+      VALUES ($1, $2, $3)
+      RETURNING id, user_id, name, description, is_active, created_at
+      `,
+      [userId, name.trim(), trimmedDescription]
+    );
+
+    const row = result.rows[0];
+    const habit = {
+      id: row.id,
+      userId: row.user_id,
+      name: row.name,
+      description: row.description,
+      isActive: row.is_active,
+      createdAt: row.created_at,
+    };
+
+    return res.status(201).json(habit);
+  } catch (error) {
+    return res.status(500).json({ error: "Failed to create habit." });
+  }
 });
 
 export default router;
