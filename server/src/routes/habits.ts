@@ -23,9 +23,8 @@ const calculateCurrentStreak = (dates: string[]) => {
 };
 
 // GET /habits
-router.get("/", async (_req, res) => {
-  // TODO: replace hardcoded userId once auth is added.
-  const userId = "00000000-0000-0000-0000-000000000000";
+router.get("/", async (req, res) => {
+  const userId = req.userId!;
   const todayUtc = toDateStringUtc(new Date());
 
   try {
@@ -86,8 +85,7 @@ router.post("/", async (req, res) => {
     return res.status(400).json({ error: "Name is required." });
   }
 
-  // TODO: replace hardcoded userId once auth is added.
-  const userId = "00000000-0000-0000-0000-000000000000";
+  const userId = req.userId!;
   const trimmedDescription = description?.trim() ?? null;
 
   try {

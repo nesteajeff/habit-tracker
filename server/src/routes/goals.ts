@@ -4,9 +4,8 @@ import db from "../db";
 const router = Router();
 
 // GET /goals
-router.get("/", async (_req, res) => {
-  // TODO: replace hardcoded userId once auth is added.
-  const userId = "00000000-0000-0000-0000-000000000000";
+router.get("/", async (req, res) => {
+  const userId = req.userId!;
 
   try {
     const result = await db.query(
@@ -47,8 +46,7 @@ router.post("/", async (req, res) => {
     return res.status(400).json({ error: "Title is required." });
   }
 
-  // TODO: replace hardcoded userId once auth is added.
-  const userId = "00000000-0000-0000-0000-000000000000";
+  const userId = req.userId!;
   const trimmedTargetDate = targetDate?.trim() || null;
 
   try {
@@ -83,6 +81,7 @@ router.post("/", async (req, res) => {
 router.patch("/:id", async (req, res) => {
   const { id } = req.params;
   const { status } = req.body as { status?: string };
+  const userId = req.userId!;
 
   if (!id) {
     return res.status(400).json({ error: "Goal id is required." });
@@ -98,9 +97,10 @@ router.patch("/:id", async (req, res) => {
       UPDATE goals
       SET status = $1
       WHERE id = $2
+        AND user_id = $3
       RETURNING id, user_id, title, target_date, status, created_at
       `,
-      [status, id]
+      [status, id, userId]
     );
 
     if (result.rows.length === 0) {

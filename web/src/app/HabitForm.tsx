@@ -6,6 +6,9 @@ import styles from "./page.module.css";
 
 const getApiBaseUrl = () =>
   process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3001";
+const getDemoUserId = () =>
+  process.env.NEXT_PUBLIC_DEMO_USER_ID ??
+  "00000000-0000-0000-0000-000000000000";
 
 export default function HabitForm() {
   const router = useRouter();
@@ -29,7 +32,10 @@ export default function HabitForm() {
     try {
       const response = await fetch(`${getApiBaseUrl()}/habits`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "x-user-id": getDemoUserId(),
+        },
         body: JSON.stringify({
           name: name.trim(),
           description: description.trim() || undefined,

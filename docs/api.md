@@ -1,5 +1,7 @@
 ## API
 
+All requests require an `x-user-id` header for now (demo auth).
+
 ### POST /habits
 
 Create a new habit for the current user.

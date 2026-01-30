@@ -68,8 +68,14 @@ const formatRelativeDateOnly = (value: string) => {
 
 const fetchHabits = async (): Promise<Habit[]> => {
   const baseUrl = process.env.API_BASE_URL ?? "http://localhost:3001";
+  const userId =
+    process.env.NEXT_PUBLIC_DEMO_USER_ID ??
+    "00000000-0000-0000-0000-000000000000";
   const response = await fetch(`${baseUrl}/habits`, {
     cache: "no-store",
+    headers: {
+      "x-user-id": userId,
+    },
   });
 
   if (!response.ok) {

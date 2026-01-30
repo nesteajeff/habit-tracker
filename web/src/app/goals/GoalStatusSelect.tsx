@@ -11,6 +11,9 @@ type Props = {
 
 const getApiBaseUrl = () =>
   process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3001";
+const getDemoUserId = () =>
+  process.env.NEXT_PUBLIC_DEMO_USER_ID ??
+  "00000000-0000-0000-0000-000000000000";
 
 const statuses = ["active", "paused", "completed"] as const;
 
@@ -28,7 +31,10 @@ export default function GoalStatusSelect({ goalId, currentStatus }: Props) {
     try {
       const response = await fetch(`${getApiBaseUrl()}/goals/${goalId}`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "x-user-id": getDemoUserId(),
+        },
         body: JSON.stringify({ status: nextStatus }),
       });
 
