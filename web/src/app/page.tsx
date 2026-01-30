@@ -10,8 +10,16 @@ type Habit = {
   description: string | null;
   isActive: boolean;
   hasCheckedInToday: boolean;
+  lastEntryDate: string | null;
   createdAt: string;
 };
+
+const formatShortDate = (value: string) =>
+  new Date(value).toLocaleDateString(undefined, {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
 
 const fetchHabits = async (): Promise<Habit[]> => {
   const baseUrl = process.env.API_BASE_URL ?? "http://localhost:3001";
@@ -71,7 +79,13 @@ export default async function Home() {
                   <p className={styles.cardDescription}>No description</p>
                 )}
                 <p className={styles.cardMeta}>
-                  Created {new Date(habit.createdAt).toLocaleString()}
+                  Created {formatShortDate(habit.createdAt)}
+                </p>
+                <p className={styles.cardMeta}>
+                  Last check-in{" "}
+                  {habit.lastEntryDate
+                    ? formatShortDate(habit.lastEntryDate)
+                    : "No check-ins yet"}
                 </p>
                 <div className={styles.checkInRow}>
                   <span className={styles.checkInStatus}>

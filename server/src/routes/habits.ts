@@ -38,6 +38,11 @@ router.get("/", async (_req, res) => {
         h.description,
         h.is_active,
         h.created_at,
+        (
+          SELECT MAX(he.entry_date)
+          FROM habit_entries he
+          WHERE he.habit_id = h.id
+        ) AS last_entry_date,
         EXISTS (
           SELECT 1
           FROM habit_entries he
@@ -58,6 +63,7 @@ router.get("/", async (_req, res) => {
       description: row.description,
       isActive: row.is_active,
       createdAt: row.created_at,
+      lastEntryDate: row.last_entry_date,
       hasCheckedInToday: row.has_checked_in_today,
     }));
 
