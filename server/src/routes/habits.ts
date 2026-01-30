@@ -80,4 +80,43 @@ router.post("/", async (req, res) => {
   }
 });
 
+// POST /habits/:id/check-in
+router.post("/:id/check-in", async (req, res) => {
+  const { id } = req.params;
+  const { entryDate } = req.body as { entryDate?: string };
+
+  if (!id) {
+    return res.status(400).json({ error: "Habit id is required." });
+  }
+
+  // Default to today's date in UTC (YYYY-MM-DD).
+  const todayUtc = new Date().toISOString().slice(0, 10);
+  const dateToUse = entryDate ?? todayUtc;
+
+  try {
+    const result = await db.query(
+      `
+      INSERT INTO habit_entries (habit_id, entry_date)
+      VALUES ($1, $2)
+      RETURNING id, habit_id, entry_date, created_at
+      `,
+      [id, dateToUse]
+    );
+
+    const row = result.rows[0];
+    const entry = {
+      id: row.id,
+      habitId: row.habit_id,
+      entryDate: row.entry_date,
+      createdAt: row.created_at,
+    };
+
+    return res.status(201).json(entry);
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error("Check-in failed:", error);
+    return res.status(500).json({ error: "Failed to create check-in." });
+  }
+});
+
 export default router;
