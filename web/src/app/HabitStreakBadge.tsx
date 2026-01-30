@@ -31,6 +31,7 @@ export default function HabitStreakBadge({ habitId }: Props) {
         const data = (await response.json()) as { currentStreak: number };
         if (isMounted) {
           setStreak(data.currentStreak);
+          setError(null);
         }
       } catch (fetchError) {
         if (isMounted) {
@@ -39,10 +40,19 @@ export default function HabitStreakBadge({ habitId }: Props) {
       }
     };
 
+    const handleCheckedIn = (event: Event) => {
+      const detail = (event as CustomEvent<{ habitId: string }>).detail;
+      if (detail?.habitId === habitId) {
+        loadStreak();
+      }
+    };
+
     loadStreak();
+    window.addEventListener("habit:checked-in", handleCheckedIn);
 
     return () => {
       isMounted = false;
+      window.removeEventListener("habit:checked-in", handleCheckedIn);
     };
   }, [habitId]);
 

@@ -38,6 +38,9 @@ export default function HabitCheckInButton({
       }
 
       router.refresh();
+      window.dispatchEvent(
+        new CustomEvent("habit:checked-in", { detail: { habitId } })
+      );
     } catch (submitError) {
       setError((submitError as Error).message);
     } finally {
