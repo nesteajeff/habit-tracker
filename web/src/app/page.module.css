@@ -107,6 +107,12 @@
   color: #b00020;
 }
 
+.link {
+  color: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
 .list {
   display: flex;
   flex-direction: column;

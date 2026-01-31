@@ -1,6 +1,31 @@
 ## API
 
-All requests require an `x-user-id` header for now (demo auth).
+Auth is cookie-based for now. First call `POST /auth/login` to set a cookie.
+
+### POST /auth/login
+
+Log in with an email (demo auth). Creates the user if needed.
+
+#### Request body
+
+```
+{
+  "email": "demo@example.com"
+}
+```
+
+#### Response (200)
+
+```
+{
+  "id": "uuid",
+  "email": "demo@example.com"
+}
+```
+
+### POST /auth/logout
+
+Clear the login cookie.
 
 ### POST /habits
 

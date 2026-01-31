@@ -1,3 +1,4 @@
+import { cookies } from "next/headers";
 import styles from "../page.module.css";
 import GoalForm from "./GoalForm";
 import GoalStatusSelect from "./GoalStatusSelect";
@@ -63,16 +64,11 @@ const formatRelativeDateOnly = (value: string) => {
   return formatter.format(diffDays, "day");
 };
 
-const fetchGoals = async (): Promise<Goal[]> => {
+const fetchGoals = async (cookieHeader: string): Promise<Goal[]> => {
   const baseUrl = process.env.API_BASE_URL ?? "http://localhost:3001";
-  const userId =
-    process.env.NEXT_PUBLIC_DEMO_USER_ID ??
-    "00000000-0000-0000-0000-000000000000";
   const response = await fetch(`${baseUrl}/goals`, {
     cache: "no-store",
-    headers: {
-      "x-user-id": userId,
-    },
+    headers: cookieHeader ? { cookie: cookieHeader } : undefined,
   });
 
   if (!response.ok) {
@@ -87,7 +83,8 @@ export default async function GoalsPage() {
   let errorMessage: string | null = null;
 
   try {
-    goals = await fetchGoals();
+    const cookieHeader = (await cookies()).toString();
+    goals = await fetchGoals(cookieHeader);
   } catch (error) {
     errorMessage = (error as Error).message;
   }
@@ -105,7 +102,9 @@ export default async function GoalsPage() {
         <GoalForm />
 
         {errorMessage ? (
-          <p className={styles.error}>{errorMessage}</p>
+          <p className={styles.error}>
+            {errorMessage} <a className={styles.link} href="/login">Log in</a>
+          </p>
         ) : (
           <ul className={styles.list}>
             {goals.map((goal) => (

@@ -9,9 +9,6 @@ type Props = {
 
 const getApiBaseUrl = () =>
   process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3001";
-const getDemoUserId = () =>
-  process.env.NEXT_PUBLIC_DEMO_USER_ID ??
-  "00000000-0000-0000-0000-000000000000";
 
 export default function HabitStreakBadge({ habitId }: Props) {
   const [streak, setStreak] = useState<number | null>(null);
@@ -26,9 +23,7 @@ export default function HabitStreakBadge({ habitId }: Props) {
           `${getApiBaseUrl()}/habits/${habitId}/streak`,
           {
             cache: "no-store",
-            headers: {
-              "x-user-id": getDemoUserId(),
-            },
+            credentials: "include",
           }
         );
 

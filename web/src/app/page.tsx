@@ -1,3 +1,4 @@
+import { cookies } from "next/headers";
 import styles from "./page.module.css";
 import HabitForm from "./HabitForm";
 import HabitCheckInButton from "./HabitCheckInButton";
@@ -66,16 +67,11 @@ const formatRelativeDateOnly = (value: string) => {
   return formatter.format(diffDays, "day");
 };
 
-const fetchHabits = async (): Promise<Habit[]> => {
+const fetchHabits = async (cookieHeader: string): Promise<Habit[]> => {
   const baseUrl = process.env.API_BASE_URL ?? "http://localhost:3001";
-  const userId =
-    process.env.NEXT_PUBLIC_DEMO_USER_ID ??
-    "00000000-0000-0000-0000-000000000000";
   const response = await fetch(`${baseUrl}/habits`, {
     cache: "no-store",
-    headers: {
-      "x-user-id": userId,
-    },
+    headers: cookieHeader ? { cookie: cookieHeader } : undefined,
   });
 
   if (!response.ok) {
@@ -90,7 +86,8 @@ export default async function Home() {
   let errorMessage: string | null = null;
 
   try {
-    habits = await fetchHabits();
+    const cookieHeader = (await cookies()).toString();
+    habits = await fetchHabits(cookieHeader);
   } catch (error) {
     errorMessage = (error as Error).message;
   }
@@ -108,7 +105,9 @@ export default async function Home() {
         <HabitForm />
 
         {errorMessage ? (
-          <p className={styles.error}>{errorMessage}</p>
+          <p className={styles.error}>
+            {errorMessage} <a className={styles.link} href="/login">Log in</a>
+          </p>
         ) : (
           <ul className={styles.list}>
             {habits.map((habit) => (

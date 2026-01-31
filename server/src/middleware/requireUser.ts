@@ -5,10 +5,10 @@ export default function requireUser(
   res: Response,
   next: NextFunction
 ) {
-  const userId = req.header("x-user-id");
+  const userId = req.header("x-user-id") ?? req.cookies?.user_id;
 
   if (!userId) {
-    return res.status(401).json({ error: "Missing x-user-id header." });
+    return res.status(401).json({ error: "Missing user id." });
   }
 
   req.userId = userId;
