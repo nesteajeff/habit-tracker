@@ -70,6 +70,7 @@ router.post("/", async (req, res) => {
   }
 
   const userId = req.userId!;
+  const trimmedName = name?.trim() ?? "";
   const trimmedDescription = description?.trim() ?? null;
 
   try {
@@ -79,7 +80,7 @@ router.post("/", async (req, res) => {
       VALUES ($1, $2, $3)
       RETURNING id, user_id, name, description, is_active, created_at
       `,
-      [userId, name.trim(), trimmedDescription]
+      [userId, trimmedName, trimmedDescription]
     );
 
     const row = result.rows[0];
