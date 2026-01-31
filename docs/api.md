@@ -214,3 +214,7 @@ Update a goal's status.
   "createdAt": "2026-01-30T12:00:00.000Z"
 }
 ```
+
+### DELETE /goals/:id
+
+Delete a goal.

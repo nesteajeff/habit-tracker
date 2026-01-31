@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import styles from "../page.module.css";
 import GoalForm from "./GoalForm";
 import GoalStatusSelect from "./GoalStatusSelect";
+import GoalDeleteButton from "./GoalDeleteButton";
 
 type Goal = {
   id: string;
@@ -126,6 +127,7 @@ export default async function GoalsPage() {
                   goalId={goal.id}
                   currentStatus={goal.status}
                 />
+                <GoalDeleteButton goalId={goal.id} />
               </li>
             ))}
           </ul>

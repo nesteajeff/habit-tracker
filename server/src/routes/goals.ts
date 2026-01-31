@@ -125,4 +125,36 @@ router.patch("/:id", async (req, res) => {
   }
 });
 
+// DELETE /goals/:id
+router.delete("/:id", async (req, res) => {
+  const { id } = req.params;
+  const userId = req.userId!;
+
+  if (!id) {
+    return res.status(400).json({ error: "Goal id is required." });
+  }
+
+  try {
+    const result = await db.query(
+      `
+      DELETE FROM goals
+      WHERE id = $1
+        AND user_id = $2
+      RETURNING id
+      `,
+      [id, userId]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "Goal not found." });
+    }
+
+    return res.status(204).send();
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error("Delete goal failed:", error);
+    return res.status(500).json({ error: "Failed to delete goal." });
+  }
+});
+
 export default router;
