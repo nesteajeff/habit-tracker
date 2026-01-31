@@ -2,7 +2,6 @@ import { cookies } from "next/headers";
 import styles from "../page.module.css";
 import GoalForm from "./GoalForm";
 import GoalStatusSelect from "./GoalStatusSelect";
-import LogoutButton from "../LogoutButton";
 
 type Goal = {
   id: string;
@@ -94,23 +93,10 @@ export default async function GoalsPage() {
     <div className={styles.page}>
       <main className={styles.main}>
         <header className={styles.header}>
-          <div className={styles.headerRow}>
-            <div>
-              <h1 className={styles.title}>Goals</h1>
-              <p className={styles.subtitle}>
-                This page loads goals from the Express API.
-              </p>
-            </div>
-            <div className={styles.nav}>
-              <a className={styles.navLink} href="/">
-                Habits
-              </a>
-              <a className={styles.navLink} href="/goals">
-                Goals
-              </a>
-              <LogoutButton />
-            </div>
-          </div>
+          <h1 className={styles.title}>Goals</h1>
+          <p className={styles.subtitle}>
+            This page loads goals from the Express API.
+          </p>
         </header>
 
         <GoalForm />

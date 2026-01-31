@@ -224,4 +224,36 @@ router.get("/:id/streak", async (req, res) => {
   }
 });
 
+// DELETE /habits/:id
+router.delete("/:id", async (req, res) => {
+  const { id } = req.params;
+  const userId = req.userId!;
+
+  if (!id) {
+    return res.status(400).json({ error: "Habit id is required." });
+  }
+
+  try {
+    const result = await db.query(
+      `
+      DELETE FROM habits
+      WHERE id = $1
+        AND user_id = $2
+      RETURNING id
+      `,
+      [id, userId]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "Habit not found." });
+    }
+
+    return res.status(204).send();
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error("Delete habit failed:", error);
+    return res.status(500).json({ error: "Failed to delete habit." });
+  }
+});
+
 export default router;

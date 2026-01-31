@@ -141,6 +141,10 @@ Get the current streak for a habit.
 
 - Streak counts consecutive days ending today (UTC).
 
+### DELETE /habits/:id
+
+Delete a habit.
+
 ### GET /goals
 
 List goals for the current user.
