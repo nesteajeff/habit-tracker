@@ -2,9 +2,7 @@ describe("Habits flow", () => {
   it("logs in, creates a habit, and checks in", () => {
     const habitName = `Test habit ${Date.now()}`;
 
-    cy.visit("/login");
-    cy.get("#email").type("demo@example.com");
-    cy.contains("button", "Log in").click();
+    cy.login();
 
     cy.contains("Habit Tracker");
     cy.get("#habit-name").type(habitName);
