@@ -3,6 +3,7 @@ import styles from "./page.module.css";
 import HabitForm from "./HabitForm";
 import HabitCheckInButton from "./HabitCheckInButton";
 import HabitStreakBadge from "./HabitStreakBadge";
+import LogoutButton from "./LogoutButton";
 
 type Habit = {
   id: string;
@@ -96,10 +97,15 @@ export default async function Home() {
     <div className={styles.page}>
       <main className={styles.main}>
         <header className={styles.header}>
-          <h1 className={styles.title}>Habit Tracker</h1>
-          <p className={styles.subtitle}>
-            This page loads habits from the Express API.
-          </p>
+          <div className={styles.headerRow}>
+            <div>
+              <h1 className={styles.title}>Habit Tracker</h1>
+              <p className={styles.subtitle}>
+                This page loads habits from the Express API.
+              </p>
+            </div>
+            <LogoutButton />
+          </div>
         </header>
 
         <HabitForm />
