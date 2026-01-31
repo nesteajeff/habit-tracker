@@ -101,7 +101,15 @@ export default async function GoalsPage() {
                 This page loads goals from the Express API.
               </p>
             </div>
-            <LogoutButton />
+            <div className={styles.nav}>
+              <a className={styles.navLink} href="/">
+                Habits
+              </a>
+              <a className={styles.navLink} href="/goals">
+                Goals
+              </a>
+              <LogoutButton />
+            </div>
           </div>
         </header>
 

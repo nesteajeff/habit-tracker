@@ -41,6 +41,23 @@
   width: 100%;
 }
 
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.navLink {
+  font-size: 14px;
+  color: var(--text-primary);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.navLink:hover {
+  text-decoration: underline;
+}
+
 .title {
   max-width: 520px;
   font-size: 40px;
