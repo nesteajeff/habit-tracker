@@ -1,6 +1,7 @@
 import { Router } from "express";
 import db from "../db";
 import { calculateCurrentStreak, toDateStringUtc } from "../utils/streak";
+import { validateHabitName } from "../utils/validation";
 
 const router = Router();
 
@@ -63,8 +64,9 @@ router.post("/", async (req, res) => {
     description?: string;
   };
 
-  if (!name || name.trim().length === 0) {
-    return res.status(400).json({ error: "Name is required." });
+  const nameError = validateHabitName(name);
+  if (nameError) {
+    return res.status(400).json({ error: nameError });
   }
 
   const userId = req.userId!;
