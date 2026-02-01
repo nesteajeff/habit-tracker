@@ -26,6 +26,9 @@ app.use(
 );
 app.use(express.json());
 app.use(cookieParser());
+app.get("/health", (_req, res) => {
+  res.status(200).json({ ok: true });
+});
 app.use("/auth", authRouter);
 app.use(requireUser);
 app.use("/habits", habitsRouter);
