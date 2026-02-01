@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import styles from "./page.module.css";
 
 type Props = {
@@ -12,7 +11,6 @@ const getApiBaseUrl = () =>
   process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3001";
 
 export default function HabitDeleteButton({ habitId }: Props) {
-  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -30,7 +28,7 @@ export default function HabitDeleteButton({ habitId }: Props) {
         throw new Error("Failed to delete habit.");
       }
 
-      router.refresh();
+      window.dispatchEvent(new Event("habits:updated"));
     } catch (deleteError) {
       setError((deleteError as Error).message);
     } finally {

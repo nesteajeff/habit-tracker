@@ -110,9 +110,11 @@ export default function Home() {
     };
 
     loadHabits();
+    window.addEventListener("habits:updated", loadHabits);
 
     return () => {
       isMounted = false;
+      window.removeEventListener("habits:updated", loadHabits);
     };
   }, []);
 

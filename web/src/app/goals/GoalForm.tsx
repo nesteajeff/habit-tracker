@@ -1,14 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import styles from "../page.module.css";
 
 const getApiBaseUrl = () =>
   process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3001";
 
 export default function GoalForm() {
-  const router = useRouter();
   const [title, setTitle] = useState("");
   const [targetDate, setTargetDate] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -45,7 +43,7 @@ export default function GoalForm() {
 
       setTitle("");
       setTargetDate("");
-      router.refresh();
+      window.dispatchEvent(new Event("goals:updated"));
     } catch (submitError) {
       setError((submitError as Error).message);
     } finally {

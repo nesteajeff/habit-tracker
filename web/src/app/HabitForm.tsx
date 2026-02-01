@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import styles from "./page.module.css";
 
@@ -8,7 +7,6 @@ const getApiBaseUrl = () =>
   process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3001";
 
 export default function HabitForm() {
-  const router = useRouter();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -45,7 +43,7 @@ export default function HabitForm() {
 
       setName("");
       setDescription("");
-      router.refresh();
+      window.dispatchEvent(new Event("habits:updated"));
     } catch (submitError) {
       setError((submitError as Error).message);
     } finally {

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import styles from "../page.module.css";
 
 type Props = {
@@ -15,7 +14,6 @@ const getApiBaseUrl = () =>
 const statuses = ["active", "paused", "completed"] as const;
 
 export default function GoalStatusSelect({ goalId, currentStatus }: Props) {
-  const router = useRouter();
   const [status, setStatus] = useState(currentStatus);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -39,7 +37,7 @@ export default function GoalStatusSelect({ goalId, currentStatus }: Props) {
         throw new Error("Failed to update status.");
       }
 
-      router.refresh();
+      window.dispatchEvent(new Event("goals:updated"));
     } catch (submitError) {
       setError((submitError as Error).message);
       setStatus(currentStatus);

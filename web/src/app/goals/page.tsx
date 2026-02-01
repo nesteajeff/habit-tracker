@@ -107,9 +107,11 @@ export default function GoalsPage() {
     };
 
     loadGoals();
+    window.addEventListener("goals:updated", loadGoals);
 
     return () => {
       isMounted = false;
+      window.removeEventListener("goals:updated", loadGoals);
     };
   }, []);
 

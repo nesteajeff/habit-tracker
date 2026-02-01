@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import styles from "./page.module.css";
 
 type Props = {
@@ -16,7 +15,6 @@ export default function HabitCheckInButton({
   habitId,
   hasCheckedInToday,
 }: Props) {
-  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -40,7 +38,7 @@ export default function HabitCheckInButton({
         throw new Error("Failed to check in.");
       }
 
-      router.refresh();
+      window.dispatchEvent(new Event("habits:updated"));
       window.dispatchEvent(
         new CustomEvent("habit:checked-in", { detail: { habitId } })
       );
