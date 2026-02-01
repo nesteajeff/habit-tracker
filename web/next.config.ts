@@ -1,5 +1,5 @@
 import type { NextConfig } from "next";
-import { withAmplify } from "@aws-amplify/adapter-nextjs";
+import withAmplify from "@aws-amplify/adapter-nextjs";
 
 const nextConfig: NextConfig = {};
 
