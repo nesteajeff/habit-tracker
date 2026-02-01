@@ -37,9 +37,11 @@ router.post("/login", async (req, res) => {
       user = created.rows[0];
     }
 
+    const isProd = process.env.NODE_ENV === "production";
     res.cookie("user_id", user.id, {
       httpOnly: true,
-      sameSite: "lax",
+      sameSite: isProd ? "none" : "lax",
+      secure: isProd,
     });
 
     return res.status(200).json({ id: user.id, email: user.email });
@@ -52,7 +54,11 @@ router.post("/login", async (req, res) => {
 
 // POST /auth/logout
 router.post("/logout", (_req, res) => {
-  res.clearCookie("user_id");
+  const isProd = process.env.NODE_ENV === "production";
+  res.clearCookie("user_id", {
+    sameSite: isProd ? "none" : "lax",
+    secure: isProd,
+  });
   return res.status(200).json({ ok: true });
 });
 
