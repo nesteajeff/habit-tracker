@@ -1,4 +1,6 @@
-import { cookies } from "next/headers";
+"use client";
+
+import { useEffect, useState } from "react";
 import styles from "../page.module.css";
 import GoalForm from "./GoalForm";
 import GoalStatusSelect from "./GoalStatusSelect";
@@ -65,11 +67,11 @@ const formatRelativeDateOnly = (value: string) => {
   return formatter.format(diffDays, "day");
 };
 
-const fetchGoals = async (cookieHeader: string): Promise<Goal[]> => {
-  const baseUrl = process.env.API_BASE_URL ?? "http://localhost:3001";
+const fetchGoals = async (): Promise<Goal[]> => {
+  const baseUrl =
+    process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3001";
   const response = await fetch(`${baseUrl}/goals`, {
-    cache: "no-store",
-    headers: cookieHeader ? { cookie: cookieHeader } : undefined,
+    credentials: "include",
   });
 
   if (!response.ok) {
@@ -79,16 +81,37 @@ const fetchGoals = async (cookieHeader: string): Promise<Goal[]> => {
   return response.json();
 };
 
-export default async function GoalsPage() {
-  let goals: Goal[] = [];
-  let errorMessage: string | null = null;
+export default function GoalsPage() {
+  const [goals, setGoals] = useState<Goal[]>([]);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  try {
-    const cookieHeader = (await cookies()).toString();
-    goals = await fetchGoals(cookieHeader);
-  } catch (error) {
-    errorMessage = (error as Error).message;
-  }
+  useEffect(() => {
+    let isMounted = true;
+    const loadGoals = async () => {
+      try {
+        const data = await fetchGoals();
+        if (isMounted) {
+          setGoals(data);
+          setErrorMessage(null);
+        }
+      } catch (error) {
+        if (isMounted) {
+          setErrorMessage((error as Error).message);
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    loadGoals();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   return (
     <div className={styles.page}>
@@ -102,7 +125,9 @@ export default async function GoalsPage() {
 
         <GoalForm />
 
-        {errorMessage ? (
+        {isLoading ? (
+          <p className={styles.subtitle}>Loading goals...</p>
+        ) : errorMessage ? (
           <p className={styles.error}>
             {errorMessage} <a className={styles.link} href="/login">Log in</a>
           </p>

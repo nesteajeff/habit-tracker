@@ -1,4 +1,6 @@
-import { cookies } from "next/headers";
+"use client";
+
+import { useEffect, useState } from "react";
 import styles from "./page.module.css";
 import HabitForm from "./HabitForm";
 import HabitCheckInButton from "./HabitCheckInButton";
@@ -68,11 +70,11 @@ const formatRelativeDateOnly = (value: string) => {
   return formatter.format(diffDays, "day");
 };
 
-const fetchHabits = async (cookieHeader: string): Promise<Habit[]> => {
-  const baseUrl = process.env.API_BASE_URL ?? "http://localhost:3001";
+const fetchHabits = async (): Promise<Habit[]> => {
+  const baseUrl =
+    process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3001";
   const response = await fetch(`${baseUrl}/habits`, {
-    cache: "no-store",
-    headers: cookieHeader ? { cookie: cookieHeader } : undefined,
+    credentials: "include",
   });
 
   if (!response.ok) {
@@ -82,16 +84,37 @@ const fetchHabits = async (cookieHeader: string): Promise<Habit[]> => {
   return response.json();
 };
 
-export default async function Home() {
-  let habits: Habit[] = [];
-  let errorMessage: string | null = null;
+export default function Home() {
+  const [habits, setHabits] = useState<Habit[]>([]);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  try {
-    const cookieHeader = (await cookies()).toString();
-    habits = await fetchHabits(cookieHeader);
-  } catch (error) {
-    errorMessage = (error as Error).message;
-  }
+  useEffect(() => {
+    let isMounted = true;
+    const loadHabits = async () => {
+      try {
+        const data = await fetchHabits();
+        if (isMounted) {
+          setHabits(data);
+          setErrorMessage(null);
+        }
+      } catch (error) {
+        if (isMounted) {
+          setErrorMessage((error as Error).message);
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    loadHabits();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   return (
     <div className={styles.page}>
@@ -105,7 +128,9 @@ export default async function Home() {
 
         <HabitForm />
 
-        {errorMessage ? (
+        {isLoading ? (
+          <p className={styles.subtitle}>Loading habits...</p>
+        ) : errorMessage ? (
           <p className={styles.error}>
             {errorMessage} <a className={styles.link} href="/login">Log in</a>
           </p>
