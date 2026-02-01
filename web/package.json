@@ -11,8 +11,7 @@
     "cy:run": "cypress run"
   },
   "dependencies": {
-    "@aws-amplify/adapter-nextjs": "latest",
-    "next": "16.1.6",
+    "next": "^15.5.11",
     "react": "19.2.3",
     "react-dom": "19.2.3"
   },
@@ -22,7 +21,7 @@
     "@types/react-dom": "^19",
     "cypress": "latest",
     "eslint": "^9",
-    "eslint-config-next": "16.1.6",
+    "eslint-config-next": "^15.5.11",
     "typescript": "^5"
   }
 }
