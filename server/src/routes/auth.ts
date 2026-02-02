@@ -1,7 +1,20 @@
-import { Router } from "express";
+import { Request, Router } from "express";
 import db from "../db";
 
 const router = Router();
+
+const getCookieOptions = (req: Request) => {
+  const origin = req.headers.origin ?? "";
+  const isLocalOrigin =
+    origin.includes("localhost") || origin.includes("127.0.0.1");
+  const sameSite = isLocalOrigin ? "lax" : "none";
+
+  return {
+    httpOnly: true,
+    sameSite,
+    secure: sameSite === "none",
+  } as const;
+};
 
 // POST /auth/login
 router.post("/login", async (req, res) => {
@@ -37,12 +50,7 @@ router.post("/login", async (req, res) => {
       user = created.rows[0];
     }
 
-    const isProd = process.env.NODE_ENV === "production";
-    res.cookie("user_id", user.id, {
-      httpOnly: true,
-      sameSite: isProd ? "none" : "lax",
-      secure: isProd,
-    });
+    res.cookie("user_id", user.id, getCookieOptions(req));
 
     return res.status(200).json({ id: user.id, email: user.email });
   } catch (error) {
@@ -53,12 +61,8 @@ router.post("/login", async (req, res) => {
 });
 
 // POST /auth/logout
-router.post("/logout", (_req, res) => {
-  const isProd = process.env.NODE_ENV === "production";
-  res.clearCookie("user_id", {
-    sameSite: isProd ? "none" : "lax",
-    secure: isProd,
-  });
+router.post("/logout", (req, res) => {
+  res.clearCookie("user_id", getCookieOptions(req));
   return res.status(200).json({ ok: true });
 });
 
