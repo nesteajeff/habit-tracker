@@ -7,7 +7,7 @@ import styles from "./page.module.css";
 export default function HeaderNav() {
   const pathname = usePathname();
 
-  if (pathname === "/login") {
+  if (pathname === "/login" || pathname === "/create-account") {
     return null;
   }
 
