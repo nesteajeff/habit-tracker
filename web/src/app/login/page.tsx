@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import styles from "../page.module.css";
 
 const getApiBaseUrl = () =>
@@ -9,7 +10,8 @@ const getApiBaseUrl = () =>
 
 export default function LoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -19,8 +21,13 @@ export default function LoginPage() {
     event.preventDefault();
     setError(null);
 
-    if (!email.trim()) {
-      setError("Email is required.");
+    if (!username.trim()) {
+      setError("Username is required.");
+      return;
+    }
+
+    if (!password) {
+      setError("Password is required.");
       return;
     }
 
@@ -30,11 +37,12 @@ export default function LoginPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ email: email.trim() }),
+        body: JSON.stringify({ username: username.trim(), password }),
       });
 
       if (!response.ok) {
-        throw new Error("Login failed.");
+        const payload = await response.json().catch(() => null);
+        throw new Error(payload?.error ?? "Login failed.");
       }
 
       router.push("/");
@@ -52,22 +60,36 @@ export default function LoginPage() {
         <header className={styles.header}>
           <h1 className={styles.title}>Log in</h1>
           <p className={styles.subtitle}>
-            Demo auth: enter any email to create or log in.
+            Welcome back! Log in with your username.
           </p>
         </header>
 
         <form className={styles.form} onSubmit={handleSubmit}>
           <div className={styles.field}>
-            <label className={styles.label} htmlFor="email">
-              Email
+            <label className={styles.label} htmlFor="username">
+              Username
             </label>
             <input
-              id="email"
+              id="username"
               className={styles.input}
-              type="email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              placeholder="demo@example.com"
+              type="text"
+              value={username}
+              onChange={(event) => setUsername(event.target.value)}
+              placeholder="yourname"
+            />
+          </div>
+
+          <div className={styles.field}>
+            <label className={styles.label} htmlFor="password">
+              Password
+            </label>
+            <input
+              id="password"
+              className={styles.input}
+              type="password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              placeholder="••••••••"
             />
           </div>
 
@@ -77,6 +99,14 @@ export default function LoginPage() {
             {isSubmitting ? "Logging in..." : "Log in"}
           </button>
         </form>
+
+        <p className={styles.helperText}>
+          Need an account?{" "}
+          <Link className={styles.link} href="/create-account">
+            Create one
+          </Link>
+          .
+        </p>
       </main>
     </div>
   );
