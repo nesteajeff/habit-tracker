@@ -1,16 +1,40 @@
 ## API
 
-Auth is cookie-based for now. First call `POST /auth/login` to set a cookie.
+Auth is cookie-based for now. Use `POST /auth/register` to create an account,
+then `POST /auth/login` to set a cookie.
 
-### POST /auth/login
+### POST /auth/register
 
-Log in with an email (demo auth). Creates the user if needed.
+Create a new user account.
 
 #### Request body
 
 ```
 {
-  "email": "demo@example.com"
+  "username": "demo",
+  "password": "password123"
+}
+```
+
+#### Response (201)
+
+```
+{
+  "id": "uuid",
+  "username": "demo"
+}
+```
+
+### POST /auth/login
+
+Log in with a username + password.
+
+#### Request body
+
+```
+{
+  "username": "demo",
+  "password": "password123"
 }
 ```
 
@@ -19,7 +43,7 @@ Log in with an email (demo auth). Creates the user if needed.
 ```
 {
   "id": "uuid",
-  "email": "demo@example.com"
+  "username": "demo"
 }
 ```
 
