@@ -136,6 +136,11 @@
   color: #b00020;
 }
 
+.helperText {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
 .link {
   color: inherit;
   font-weight: 600;
