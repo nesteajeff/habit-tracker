@@ -20,7 +20,7 @@ This is the set of tables needed for the habit/goal tracker.
 #### `users`
 
 - `id` (uuid, PK)
-- `email` (text, unique, not null)
+- `username` (text, unique, not null)
 - `password_hash` (text, not null)
 - `created_at` (timestamptz, not null, default now())
 
