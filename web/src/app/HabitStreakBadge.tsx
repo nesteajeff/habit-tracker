@@ -67,5 +67,5 @@ export default function HabitStreakBadge({ habitId }: Props) {
     return <span className={styles.streakLoading}>Loading streak...</span>;
   }
 
-  return <span className={styles.streakBadge}>{streak} day streak</span>;
+  return <span className={styles.streakBadge}>{streak} streak</span>;
 }
