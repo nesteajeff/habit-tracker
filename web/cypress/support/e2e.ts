@@ -14,7 +14,7 @@ Cypress.Commands.add(
     cy.visit("/create-account");
     cy.get("#username").type(username);
     cy.get("#password").type(password);
-    cy.contains("button", "Create account").click();
+    cy.contains("button", "Create Account").click();
   }
 );
 

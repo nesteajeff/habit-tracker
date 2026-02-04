@@ -5,15 +5,15 @@ describe("Goals flow", () => {
     cy.login();
 
     cy.visit("/goals");
-    cy.contains("Goals");
+    cy.contains("Goal Tracker");
     cy.get("#goal-title").type(goalTitle);
-    cy.contains("button", "Create goal").click();
+    cy.contains("button", "Create Goal").click();
 
     cy.contains("span", goalTitle)
       .parents("li")
       .within(() => {
-        cy.get("select").select("completed");
-        cy.contains("completed");
+        cy.get('button[aria-label="Mark goal completed"]').click();
+        cy.get('button[aria-label="Goal completed"]').should("be.disabled");
       });
   });
 });
