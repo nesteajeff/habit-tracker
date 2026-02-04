@@ -58,7 +58,7 @@ export default function CreateAccountPage() {
     <div className={styles.page}>
       <main className={styles.main}>
         <header className={styles.header}>
-          <h1 className={styles.title}>Create account</h1>
+          <h1 className={styles.title}>Create Account</h1>
           <p className={styles.subtitle}>
             Pick a username and password to get started.
           </p>
@@ -75,7 +75,6 @@ export default function CreateAccountPage() {
               type="text"
               value={username}
               onChange={(event) => setUsername(event.target.value)}
-              placeholder="yourname"
             />
           </div>
 
@@ -96,7 +95,7 @@ export default function CreateAccountPage() {
           {error ? <p className={styles.error}>{error}</p> : null}
 
           <button className={styles.button} type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Creating..." : "Create account"}
+            {isSubmitting ? "Creating..." : "Create Account"}
           </button>
         </form>
 

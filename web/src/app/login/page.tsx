@@ -58,7 +58,7 @@ export default function LoginPage() {
     <div className={styles.page}>
       <main className={styles.main}>
         <header className={styles.header}>
-          <h1 className={styles.title}>Log in</h1>
+          <h1 className={styles.title}>Log In</h1>
           <p className={styles.subtitle}>
             Welcome back! Log in with your username.
           </p>
@@ -75,7 +75,6 @@ export default function LoginPage() {
               type="text"
               value={username}
               onChange={(event) => setUsername(event.target.value)}
-              placeholder="yourname"
             />
           </div>
 
@@ -96,7 +95,7 @@ export default function LoginPage() {
           {error ? <p className={styles.error}>{error}</p> : null}
 
           <button className={styles.button} type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Logging in..." : "Log in"}
+            {isSubmitting ? "Logging in..." : "Log In"}
           </button>
         </form>
 

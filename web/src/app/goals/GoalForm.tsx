@@ -55,20 +55,19 @@ export default function GoalForm() {
     <form className={styles.form} onSubmit={handleSubmit}>
       <div className={styles.field}>
         <label className={styles.label} htmlFor="goal-title">
-          Goal title
+          Goal Title
         </label>
         <input
           id="goal-title"
           className={styles.input}
           value={title}
           onChange={(event) => setTitle(event.target.value)}
-          placeholder="Run a 5k"
         />
       </div>
 
       <div className={styles.field}>
         <label className={styles.label} htmlFor="goal-target-date">
-          Target date (optional)
+          Target Date (optional)
         </label>
         <input
           id="goal-target-date"
@@ -82,7 +81,7 @@ export default function GoalForm() {
       {error ? <p className={styles.error}>{error}</p> : null}
 
       <button className={styles.button} type="submit" disabled={isSubmitting}>
-        {isSubmitting ? "Creating..." : "Create goal"}
+        {isSubmitting ? "Creating..." : "Create Goal"}
       </button>
     </form>
   );

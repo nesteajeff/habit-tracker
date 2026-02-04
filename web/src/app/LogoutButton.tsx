@@ -43,7 +43,7 @@ export default function LogoutButton() {
         onClick={handleLogout}
         disabled={isSubmitting}
       >
-        {isSubmitting ? "Logging out..." : "Log out"}
+        {isSubmitting ? "Logging out..." : "Log Out"}
       </button>
       {error ? <span className={styles.logoutError}>{error}</span> : null}
     </div>
