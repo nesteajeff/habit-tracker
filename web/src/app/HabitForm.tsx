@@ -8,7 +8,6 @@ const getApiBaseUrl = () =>
 
 export default function HabitForm() {
   const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -33,7 +32,6 @@ export default function HabitForm() {
         credentials: "include",
         body: JSON.stringify({
           name: name.trim(),
-          description: description.trim() || undefined,
         }),
       });
 
@@ -42,7 +40,6 @@ export default function HabitForm() {
       }
 
       setName("");
-      setDescription("");
       window.dispatchEvent(new Event("habits:updated"));
     } catch (submitError) {
       setError((submitError as Error).message);
@@ -55,34 +52,20 @@ export default function HabitForm() {
     <form className={styles.form} onSubmit={handleSubmit}>
       <div className={styles.field}>
         <label className={styles.label} htmlFor="habit-name">
-          Habit name
+          Habit Name
         </label>
         <input
           id="habit-name"
           className={styles.input}
           value={name}
           onChange={(event) => setName(event.target.value)}
-          placeholder="Drink water"
-        />
-      </div>
-
-      <div className={styles.field}>
-        <label className={styles.label} htmlFor="habit-description">
-          Description (optional)
-        </label>
-        <input
-          id="habit-description"
-          className={styles.input}
-          value={description}
-          onChange={(event) => setDescription(event.target.value)}
-          placeholder="At least 8 cups"
         />
       </div>
 
       {error ? <p className={styles.error}>{error}</p> : null}
 
       <button className={styles.button} type="submit" disabled={isSubmitting}>
-        {isSubmitting ? "Creating..." : "Create habit"}
+        {isSubmitting ? "Creating..." : "Create Habit"}
       </button>
     </form>
   );

@@ -5,12 +5,13 @@ import styles from "./page.module.css";
 
 type Props = {
   habitId: string;
+  inline?: boolean;
 };
 
 const getApiBaseUrl = () =>
   process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3001";
 
-export default function HabitDeleteButton({ habitId }: Props) {
+export default function HabitDeleteButton({ habitId, inline = false }: Props) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -37,14 +38,19 @@ export default function HabitDeleteButton({ habitId }: Props) {
   };
 
   return (
-    <div className={styles.deleteRow}>
+    <div
+      className={`${styles.deleteRow} ${inline ? styles.deleteRowInline : ""}`}
+    >
       <button
-        className={styles.deleteButton}
+        className={`${styles.deleteButton} ${
+          isSubmitting ? styles.deleteButtonActive : ""
+        }`}
         type="button"
         onClick={handleDelete}
         disabled={isSubmitting}
+        aria-label="Delete habit"
       >
-        {isSubmitting ? "Deleting..." : "Delete"}
+        {isSubmitting ? "…" : "×"}
       </button>
       {error ? <span className={styles.deleteError}>{error}</span> : null}
     </div>

@@ -36,6 +36,8 @@ export default function Home() {
   const [habits, setHabits] = useState<Habit[]>([]);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isDeleteMode, setIsDeleteMode] = useState(false);
+  const cardAccents = ["#1e40af"];
 
   useEffect(() => {
     let isMounted = true;
@@ -71,12 +73,18 @@ export default function Home() {
       <main className={styles.main}>
         <header className={styles.header}>
           <h1 className={styles.title}>Habit Tracker</h1>
-          <p className={styles.subtitle}>
-            This page loads habits from the Express API.
-          </p>
         </header>
 
         <HabitForm />
+        <button
+          className={`${styles.deleteModeButton} ${
+            isDeleteMode ? styles.deleteModeButtonActive : ""
+          }`}
+          type="button"
+          onClick={() => setIsDeleteMode((value) => !value)}
+        >
+          Delete Habits
+        </button>
 
         {isLoading ? (
           <p className={styles.subtitle}>Loading habits...</p>
@@ -86,21 +94,31 @@ export default function Home() {
           </p>
         ) : (
           <ul className={styles.list}>
-            {habits.map((habit) => (
-              <li key={habit.id} className={styles.card}>
+            {habits.map((habit, index) => (
+              <li
+                key={habit.id}
+                className={styles.card}
+                style={
+                  {
+                    "--card-accent": cardAccents[index % cardAccents.length],
+                  } as React.CSSProperties
+                }
+              >
                 <div className={styles.cardHeader}>
-                  <span className={styles.cardTitle}>{habit.name}</span>
+                  <div className={styles.cardHeaderLeft}>
+                    {isDeleteMode ? (
+                      <HabitDeleteButton habitId={habit.id} inline />
+                    ) : null}
+                    <span className={styles.cardTitle}>{habit.name}</span>
+                  </div>
                   <div className={styles.cardBadges}>
+                    <HabitCheckInButton
+                      habitId={habit.id}
+                      hasCheckedInToday={habit.hasCheckedInToday}
+                    />
                     <HabitStreakBadge habitId={habit.id} />
                   </div>
                 </div>
-                <div className={styles.checkInRow}>
-                  <HabitCheckInButton
-                    habitId={habit.id}
-                    hasCheckedInToday={habit.hasCheckedInToday}
-                  />
-                </div>
-                <HabitDeleteButton habitId={habit.id} />
               </li>
             ))}
           </ul>

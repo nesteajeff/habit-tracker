@@ -52,16 +52,15 @@ export default function HabitCheckInButton({
   return (
     <div className={styles.checkIn}>
       <button
-        className={styles.checkInButton}
+        className={`${styles.checkInButton} ${
+          hasCheckedInToday ? styles.checkInButtonChecked : ""
+        }`}
         type="button"
         onClick={handleCheckIn}
         disabled={isSubmitting || hasCheckedInToday}
+        aria-label={hasCheckedInToday ? "Checked in" : "Check in"}
       >
-        {hasCheckedInToday
-          ? "Checked in"
-          : isSubmitting
-            ? "Checking in..."
-            : "Check in"}
+        {isSubmitting ? "…" : "✓"}
       </button>
       {error ? <span className={styles.checkInError}>{error}</span> : null}
     </div>
