@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 import styles from "../page.module.css";
 import GoalForm from "./GoalForm";
-import GoalStatusSelect from "./GoalStatusSelect";
 import GoalDeleteButton from "./GoalDeleteButton";
+import GoalCheckInButton from "./GoalCheckInButton";
 
 type Goal = {
   id: string;
@@ -15,56 +15,20 @@ type Goal = {
   createdAt: string;
 };
 
-const formatRelativeDateTime = (value: string) => {
-  const date = new Date(value);
-  const now = new Date();
-  const diffMs = date.getTime() - now.getTime();
-  const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
-
-  const formatter = new Intl.RelativeTimeFormat(undefined, {
-    numeric: "auto",
-  });
-
-  if (Math.abs(diffDays) >= 1) {
-    return formatter.format(diffDays, "day");
-  }
-
-  const diffHours = Math.round(diffMs / (1000 * 60 * 60));
-  if (Math.abs(diffHours) >= 1) {
-    return formatter.format(diffHours, "hour");
-  }
-
-  const diffMinutes = Math.round(diffMs / (1000 * 60));
-  if (Math.abs(diffMinutes) >= 1) {
-    return formatter.format(diffMinutes, "minute");
-  }
-
-  return "just now";
-};
-
-const formatRelativeDateOnly = (value: string) => {
+const formatDateOnly = (value: string) => {
   const dateOnly = value.includes("T") ? value.slice(0, 10) : value;
   const [year, month, day] = dateOnly.split("-").map(Number);
   if (!year || !month || !day) {
     return "unknown";
   }
-  const date = new Date(year, month - 1, day);
-  const now = new Date();
 
-  const dateStart = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-  const nowStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const diffMs = dateStart.getTime() - nowStart.getTime();
-  const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
-
-  const formatter = new Intl.RelativeTimeFormat(undefined, {
-    numeric: "auto",
-  });
-
-  if (!Number.isFinite(diffDays)) {
-    return "unknown";
-  }
-
-  return formatter.format(diffDays, "day");
+  const date = new Date(Date.UTC(year, month - 1, day));
+  return new Intl.DateTimeFormat(undefined, {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(date);
 };
 
 const fetchGoals = async (): Promise<Goal[]> => {
@@ -85,6 +49,7 @@ export default function GoalsPage() {
   const [goals, setGoals] = useState<Goal[]>([]);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isDeleteMode, setIsDeleteMode] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -119,13 +84,19 @@ export default function GoalsPage() {
     <div className={styles.page}>
       <main className={styles.main}>
         <header className={styles.header}>
-          <h1 className={styles.title}>Goals</h1>
-          <p className={styles.subtitle}>
-            This page loads goals from the Express API.
-          </p>
+          <h1 className={styles.title}>Goal Tracker</h1>
         </header>
 
         <GoalForm />
+        <button
+          className={`${styles.deleteModeButton} ${
+            isDeleteMode ? styles.deleteModeButtonActive : ""
+          }`}
+          type="button"
+          onClick={() => setIsDeleteMode((value) => !value)}
+        >
+          Delete Goals
+        </button>
 
         {isLoading ? (
           <p className={styles.subtitle}>Loading goals...</p>
@@ -138,23 +109,25 @@ export default function GoalsPage() {
             {goals.map((goal) => (
               <li key={goal.id} className={styles.card}>
                 <div className={styles.cardHeader}>
-                  <span className={styles.cardTitle}>{goal.title}</span>
-                  <span className={styles.badge}>{goal.status}</span>
+                  <div className={styles.cardHeaderLeft}>
+                    {isDeleteMode ? (
+                      <GoalDeleteButton goalId={goal.id} inline />
+                    ) : null}
+                    <span className={styles.cardTitle}>{goal.title}</span>
+                  </div>
+                  <div className={styles.cardBadges}>
+                    <GoalCheckInButton
+                      goalId={goal.id}
+                      isCompleted={goal.status === "completed"}
+                    />
+                  </div>
                 </div>
                 <p className={styles.cardMeta}>
-                  Created {formatRelativeDateTime(goal.createdAt)}
-                </p>
-                <p className={styles.cardMeta}>
-                  Target{" "}
+                  Target Date:{" "}
                   {goal.targetDate
-                    ? formatRelativeDateOnly(goal.targetDate)
-                    : "No target date"}
+                    ? formatDateOnly(goal.targetDate)
+                    : "None"}
                 </p>
-                <GoalStatusSelect
-                  goalId={goal.id}
-                  currentStatus={goal.status}
-                />
-                <GoalDeleteButton goalId={goal.id} />
               </li>
             ))}
           </ul>
