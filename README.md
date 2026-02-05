@@ -1,1 +1,1 @@
-Visit via habitstracker.ca!
+Visit here: [Habit Tracker](https://www.habitstracker.ca)
